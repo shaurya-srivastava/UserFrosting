@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 namespace UserFrosting\Tests;
 
 use Slim\App;
@@ -7,9 +13,12 @@ use Slim\Container;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use UserFrosting\Sprinkle\Core\Initialize\SprinkleManager;
 
-use Dotenv\Exception\InvalidPathException;
-use Illuminate\Database\Capsule\Manager as Capsule;
-
+/**
+ * Class to handle Test
+ *
+ * @author Alex Weissman (https://alexanderweissman.com)
+ * @see http://www.userfrosting.com/navigating/#structure
+ */
 class TestCase extends BaseTestCase
 {
     /**
@@ -18,6 +27,13 @@ class TestCase extends BaseTestCase
      * @var \Illuminate\Foundation\Application
      */
     protected $app;
+
+    /**
+     * The global container object, which holds all your services.
+     *
+     * @var \Interop\Container\ContainerInterface
+     */
+    protected $ci;
 
     /**
      * The callbacks that should be run after the application is created.
@@ -51,11 +67,31 @@ class TestCase extends BaseTestCase
             $this->refreshApplication();
         }
 
+        $this->setUpTraits();
+
         foreach ($this->afterApplicationCreatedCallbacks as $callback) {
             call_user_func($callback);
         }
 
         $this->setUpHasRun = true;
+    }
+
+    /**
+     * Boot the testing helper traits.
+     *
+     * @return void
+     */
+    protected function setUpTraits()
+    {
+        $uses = array_flip(class_uses_recursive(static::class));
+
+        /*if (isset($uses[DatabaseMigrations::class])) {
+            $this->runDatabaseMigrations();
+        }*/
+
+        if (isset($uses[DatabaseTransactions::class])) {
+            $this->beginDatabaseTransaction();
+        }
     }
 
     /**
@@ -66,21 +102,21 @@ class TestCase extends BaseTestCase
     protected function refreshApplication()
     {
         // First, we create our DI container
-        $container = new Container;
+        $this->ci = new Container;
 
         // Attempt to fetch list of Sprinkles
         $sprinkles = loadSprinkleSchema()->base;
 
         // Set up sprinkle manager service and list our Sprinkles.  Core sprinkle does not need to be explicitly listed.
-        $container['sprinkleManager'] = function ($c) use ($sprinkles) {
+        $this->ci['sprinkleManager'] = function ($c) use ($sprinkles) {
             return new SprinkleManager($c, $sprinkles);
         };
 
         // Now, run the sprinkle manager to boot up all our sprinkles
-        $container->sprinkleManager->init();
+        $this->ci->sprinkleManager->init();
 
         // Next, we'll instantiate the application.  Note that the application is required for the SprinkleManager to set up routes.
-        $this->app = new App($container);
+        $this->app = new App($this->ci);
     }
 
     /**
@@ -98,13 +134,13 @@ class TestCase extends BaseTestCase
             // Need to manually remove locator streams
             // PHP native stream_wrapper_register won't allow wrappers to be redefined on the next test otherwise
             // We use `StreamBuilder` remove function to remove each defined scheme
-            $ci = $this->app->getContainer();
-            $streamBuilder = $ci->streamBuilder;
+            $streamBuilder = $this->ci->streamBuilder;
             foreach ($streamBuilder->getStreams() as $scheme => $handler) {
                 $streamBuilder->remove($scheme);
             }
 
             $this->app = null;
+            $this->ci = null;
         }
 
         $this->setUpHasRun = false;
