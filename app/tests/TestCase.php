@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace UserFrosting\Tests;
 
 use Slim\App;
 use Slim\Container;

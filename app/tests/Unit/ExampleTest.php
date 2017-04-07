@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Unit;
+namespace UserFrosting\Tests\Unit;
 
-use Tests\TestCase;
+use UserFrosting\Tests\TestCase;
 //use Illuminate\Foundation\Testing\DatabaseMigrations;
 //use Illuminate\Foundation\Testing\DatabaseTransactions;
 
