@@ -3,8 +3,8 @@
 namespace UserFrosting\Tests\Unit;
 
 use UserFrosting\Tests\TestCase;
-//use Illuminate\Foundation\Testing\DatabaseMigrations;
-//use Illuminate\Foundation\Testing\DatabaseTransactions;
+//use UserFrosting\Tests\DatabaseMigrations;
+use UserFrosting\Tests\DatabaseTransactions;
 
 class ExampleTest extends TestCase
 {
