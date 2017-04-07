@@ -369,20 +369,8 @@ class CoreServicesProvider
             // Use locator to initialize streams
             ReadOnlyStream::setLocator($locator);
 
-            $sb = new StreamBuilder([
-                'build' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                'log' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                'cache' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                'session' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                'sprinkles' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'assets' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'schema' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'templates' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'extra' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'locale' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'config' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'routes' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream'
-            ]);
+            // Fire up StreamBuilder
+            $c->streamBuilder;
 
             return $locator;
         };
@@ -489,6 +477,28 @@ class CoreServicesProvider
         $container['shutdownHandler'] = function ($c) {
             // This takes the entire container, so we don't have to initialize any other services unless absolutely necessary.
             return new ShutdownHandler($c);
+        };
+
+        /**
+         * StreamBuilder, to fire up our custom StreamWrapper defined in the locator service.
+         */
+        $container['streamBuilder'] = function ($c) {
+            $sb = new StreamBuilder([
+                'build' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
+                'log' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
+                'cache' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
+                'session' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
+                'sprinkles' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                'assets' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                'schema' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                'templates' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                'extra' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                'locale' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                'config' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                'routes' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream'
+            ]);
+
+            return $sb;
         };
 
         /**
