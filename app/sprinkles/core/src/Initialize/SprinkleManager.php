@@ -127,6 +127,15 @@ class SprinkleManager
         return $this->ci->locator->findResource('extra://', true, false);
     }
 
+    public function addFactories($name)
+    {
+        $path = $this->sprinklesPath . $name . \UserFrosting\DS . \UserFrosting\FACTORY_DIR_NAME;
+
+        $this->ci->locator->addPath('factories', '', $path);
+
+        return $this->ci->locator->findResource('factories://', true, false);
+    }
+
     /**
      * Adds locales for a specified Sprinkle to the locale (locale://) stream.
      *
@@ -195,6 +204,7 @@ class SprinkleManager
         $this->addConfig($name);
         $this->addAssets($name);
         $this->addExtras($name);
+        $this->addFactories($name);
         $this->addLocale($name);
         $this->addRoutes($name);
         $this->addSchema($name);

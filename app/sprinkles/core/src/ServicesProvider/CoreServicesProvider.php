@@ -19,6 +19,8 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\DatabaseSessionHandler;
 use Illuminate\Session\FileSessionHandler;
 use Interop\Container\ContainerInterface;
+use League\FactoryMuffin\FactoryMuffin;
+use League\FactoryMuffin\Faker\Facade as Faker;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
@@ -352,6 +354,28 @@ class CoreServicesProvider
         };
 
         /**
+         * Factory service with FactoryMuffin.
+         *
+         * Provide access to factories for the rapid creation of objects for the purpose of testing
+         */
+        $container['factory'] = function ($c) {
+
+            // Get the path of all of the sprinkle's factories
+            $factories_path = $c->locator->findResources('factories://', true, true);
+
+            // Create a new Factory Muffin instance
+            $fm = new FactoryMuffin();
+
+            // Load all of the model definitions
+            $fm->loadFactories($factories_path);
+
+            // Set the locale. Could be the config one, but for testing English should do
+            Faker::setLocale('en_EN');
+
+            return $fm;
+        };
+
+        /**
          * Path/file locator service.
          *
          * Register custom streams for the application, and add paths for app-level streams.
@@ -495,7 +519,8 @@ class CoreServicesProvider
                 'extra' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
                 'locale' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
                 'config' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'routes' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream'
+                'routes' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                'factories' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream'
             ]);
 
             return $sb;
