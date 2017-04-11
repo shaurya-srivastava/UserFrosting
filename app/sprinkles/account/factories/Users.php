@@ -14,10 +14,10 @@ use League\FactoryMuffin\Faker\Facade as Faker;
  * General factory for the User Model
  */
 $fm->define('UserFrosting\Sprinkle\Account\Model\User')->setDefinitions([
-    'user_name' => Faker::firstNameMale(),
+    'user_name' => Faker::unique()->firstNameMale(),
     'first_name' => Faker::firstNameMale(),
     'last_name' => Faker::firstNameMale(),
-    'email'    => Faker::email(),
+    'email'    => Faker::unique()->email(),
     'locale' => 'en_US',
     'flag_verified' => 1,
     'flag_enabled' => 1,
