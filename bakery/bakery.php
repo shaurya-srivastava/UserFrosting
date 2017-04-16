@@ -81,5 +81,5 @@
     echo PHP_EOL;
 
     // Done with the bakery
-    //echo PHP_EOL."Ready to bake!";
+    echo PHP_EOL."UserFrosting installation looks fine. Ready to bake!";
     echo PHP_EOL.PHP_EOL;
