@@ -49,6 +49,8 @@
         "debug" : "php ../bakery/bakery.php",
         "build-assets" : "php ../build/build.php",
         "test" : "phpunit",
+        "debug-console" : ["# Use ctrl+c to exit", "tail -f -n 0 logs/debug.log"],
+        "error-console" : ["# Use ctrl+c to exit", "tail -f -n 0 logs/errors.log"],
         "bake" : [
             "@composer update",
             "@debug",
