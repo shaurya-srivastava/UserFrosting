@@ -52,9 +52,12 @@ return [
     ],
 
     "EMAIL" => [
-        "INVALID"   => "There is no account for '{{email}}'.",
-        "IN_USE"    => "Email '{{email}}' is already in use."
+        "INVALID"               => "There is no account for <strong>{{email}}</strong>.",
+        "IN_USE"                => "Email <strong>{{email}}</strong> is already in use.",
+        "VERIFICATION_REQUIRED" => "Email (verification required - use a real address!)"
     ],
+
+    "EMAIL_OR_USERNAME" => "Username or email address",
 
     "FIRST_NAME" => "First name",
 
@@ -64,7 +67,7 @@ return [
 
     "LOCALE" => [
         "ACCOUNT" => "The language and locale to use for your account",
-        "INVALID" => "'{{locale}}' is not a valid locale."
+        "INVALID" => "<strong>{{locale}}</strong> is not a valid locale."
     ],
 
     "LOGIN" => [
@@ -77,6 +80,8 @@ return [
     "LOGOUT" => "Logout",
 
     "NAME" => "Name",
+
+    "NAME_AND_EMAIL" => "Name and email",
 
     "PAGE" => [
         "LOGIN" => [
@@ -109,7 +114,7 @@ return [
             "INVALID"           => "This password reset request could not be found, or has expired.  Please try <a href=\"{{url}}\">resubmitting your request<a>.",
             "PAGE"              => "Get a link to reset your password.",
             "REQUEST_CANNED"    => "Lost password request cancelled.",
-            "REQUEST_SENT"      => "A password reset link has been sent to {{email}}."
+            "REQUEST_SENT"      => "A password reset link has been sent to <strong>{{email}}</strong>."
         ],
 
         "RESET" => [
@@ -130,14 +135,14 @@ return [
         "SETTINGS"  => "Profile settings",
         "UPDATED"   => "Profile settings updated"
     ],
-    
+
     "REGISTER"      => "Register",
     "REGISTER_ME"   => "Sign me up",
 
     "REGISTRATION" => [
         "BROKEN"            => "We're sorry, there is a problem with our account registration process.  Please contact us directly for assistance.",
         "COMPLETE_TYPE1"    => "You have successfully registered. You can now sign in.",
-        "COMPLETE_TYPE2"    => "You have successfully registered. You will soon receive a verification email containing a link to activate your account.  You will not be able to sign in until you complete this step.",
+        "COMPLETE_TYPE2"    => "You have successfully registered. A link to activate your account has been sent to <strong>{{email}}</strong>.  You will not be able to sign in until you complete this step.",
         "DISABLED"          => "We're sorry, account registration has been disabled.",
         "LOGOUT"            => "I'm sorry, you cannot register for an account while logged in. Please log out first.",
         "WELCOME"           => "Registration is fast and simple."
@@ -158,14 +163,15 @@ return [
     "USERNAME" => [
         "@TRANSLATION" => "Username",
 
-        "CHOOSE"  => "Choose a unique username",
-        "INVALID" => "Invalid username",
-        "IN_USE"  => "Username '{{user_name}}' is already in use."
+        "CHOOSE"        => "Choose a unique username",
+        "INVALID"       => "Invalid username",
+        "IN_USE"        => "Username <strong>{{user_name}}</strong> is already in use.",
+        "NOT_AVAILABLE" => "Username <strong>{{user_name}}</strong> is not available. Choose a different name, or click 'suggest'."
     ],
 
     "USER_ID_INVALID"       => "The requested user id does not exist.",
     "USER_OR_EMAIL_INVALID" => "Username or email address is invalid.",
-    "USER_OR_PASS_INVALID"  => "Username or password is invalid.",
+    "USER_OR_PASS_INVALID"  => "User not found or password is invalid.",
 
     "WELCOME" => "Welcome back, {{first_name}}"
 ];

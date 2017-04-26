@@ -1,11 +1,11 @@
 /* To build bundles...
-    1. npm run uf-build-bundle
+    1. npm run uf-bundle-build
     2. npm run uf-bundle
-    3. npm run uf-bundle-cleanup
+    3. npm run uf-bundle-clean
 
    To get frontend vendor packages via bower
     1. npm run uf-assets-install
-   
+
    To clean frontend vendor assets
     1. npm run uf-assets-clean
 */
@@ -16,12 +16,14 @@ const fs = require('fs');
 const shell = require('shelljs');
 const plugins = require('gulp-load-plugins')();
 
-const sprinklesDir = '../app/sprinkles';
+const sprinklesDir = '../app/sprinkles/';
+
+const sprinklesSchemaPath = '../app/sprinkles.json';
 
 // The Sprinkle load order from sprinkles.json
-const sprinkles = ['core'].concat(require(`${sprinklesDir}/sprinkles.json`)['base']);
+const sprinkles = ['core'].concat(require(`${sprinklesSchemaPath}`)['base']);
 
-// The directory where the bundle task should place compiled assets. 
+// The directory where the bundle task should place compiled assets.
 // The names of assets in bundle.result.json will be specified relative to this path.
 const publicAssetsDir = '../public/assets/';
 

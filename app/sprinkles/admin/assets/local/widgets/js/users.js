@@ -11,7 +11,7 @@ function attachUserForm() {
         var form = modal.find('.js-form');
 
         // Set up any widgets inside the modal
-        form.find(".select2").select2({
+        form.find(".js-select2").select2({
             width: '100%'
         });
 
@@ -131,10 +131,14 @@ function updateUser(userName, fieldName, fieldValue) {
             // Set up collection widget
             var roleWidget = modal.find('.js-form-roles');
             roleWidget.ufCollection({
-                dataUrl         : site.uri.public + '/api/roles',
+                dropdown : {
+                    ajax: {
+                        url     : site.uri.public + '/api/roles'
+                    },
+                    placeholder : "Select a role"
+                },
                 dropdownTemplate: modal.find('#user-roles-select-option').html(),
-                rowTemplate     : modal.find('#user-roles-row').html(),
-                placeholder     : "Select a role"
+                rowTemplate     : modal.find('#user-roles-row').html()
             });
 
             // Get current roles and add to widget

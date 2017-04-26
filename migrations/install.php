@@ -9,8 +9,9 @@
     use Illuminate\Database\Schema\Blueprint;
     use Slim\Container;
     use Slim\Http\Uri;
-    use UserFrosting\Sprinkle\Core\Initialize\SprinkleManager;
     use UserFrosting\Sprinkle\Core\Model\Version;
+    use UserFrosting\System\Sprinkle\SprinkleManager;
+    use UserFrosting\System\UserFrosting;
 
     if (!defined('STDIN')) {
         die('This program must be run from the command line.');
@@ -18,32 +19,23 @@
 
     // 1° Pre-flight check and bootup
     // Check php version
-    if (version_compare(phpversion(), UserFrosting\PHP_MIN_VERSION, "<")) {
-        die('UserFrosting requires PHP version '.UserFrosting\PHP_MIN_VERSION.' or up.');
+    if (version_compare(phpversion(), \UserFrosting\PHP_MIN_VERSION, "<")) {
+        die('UserFrosting requires PHP version '. \UserFrosting\PHP_MIN_VERSION.' or up.');
     }
 
-    // First, we create our DI container
-    $container = new Container;
+    // Create new UserFrosting object, which will set up our DI container and boot up Sprinkles
+    $uf = new UserFrosting();
+    $uf->setupSprinkles(false);
 
-    // Attempt to fetch list of Sprinkles
-    $sprinklesFile = file_get_contents(UserFrosting\APP_DIR . '/' . UserFrosting\SPRINKLES_DIR_NAME . '/sprinkles.json');
-    if ($sprinklesFile === false) {
-        die(PHP_EOL . "File 'app/sprinkles/sprinkles.json' not found. Please create a 'sprinkles.json' file and try again." . PHP_EOL);
-    }
-    $sprinkles = json_decode($sprinklesFile)->base;
-
-    // Set up sprinkle manager service and list our Sprinkles.  Core sprinkle does not need to be explicitly listed.
-    $container['sprinkleManager'] = function ($c) use ($sprinkles) {
-        return new SprinkleManager($c, $sprinkles);
-    };
-
-    // Now, run the sprinkle manager to boot up all our sprinkles
-    $container->sprinkleManager->init();
+    $container = $uf->getContainer();
 
     $container->config['settings.displayErrorDetails'] = false;
 
     // Get config
     $config = $container->config;
+
+    // Get loaded sprinkles
+    $sprinkles = $container->sprinkleManager->getSprinkleNames();
 
     // Boot db
     $container->db;
@@ -56,11 +48,7 @@
 
     // Test database connection directly using PDO
     try {
-        $dsn = "{$dbParams['driver']}:host={$dbParams['host']};dbname={$dbParams['database']}";
-        if (isset($dbParams['port'])) {
-            $dsn .= ";port={$dbParams['port']}";
-        }
-        $dbh = new \PDO($dsn, $dbParams['username'], $dbParams['password']);
+        Capsule::connection()->getPdo();
     } catch (\PDOException $e) {
         $message = PHP_EOL . "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration and/or google the exception shown below:" . PHP_EOL;
         $message .= "Exception: " . $e->getMessage() . PHP_EOL;
@@ -75,9 +63,10 @@
 
     echo PHP_EOL . "Welcome to the UserFrosting installation tool!" . PHP_EOL;
     echo "The detected operating system is '$detectedOS'." . PHP_EOL;
-    echo "Is this correct?  [Y/n]: ";
+    echo "Is this correct?  ([y]/n): ";
 
     $answer = trim(fgets(STDIN));
+    if(empty($answer)) { $answer = "y" ; }
 
     if (!in_array(strtolower($answer), array('yes', 'y'))) {
         // OS
@@ -118,9 +107,6 @@
 
     // 4° Migrate each sprinkles
     echo PHP_EOL . "Migrating Sprinkle's:" . PHP_EOL;
-
-    // Add 'core'' to beginning sprinkles list for migration
-    array_unshift($sprinkles, 'core');
 
     // Looping throught every sprinkle and running their migration
     foreach ($sprinkles as $sprinkle) {

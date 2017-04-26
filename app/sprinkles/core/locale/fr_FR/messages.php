@@ -56,9 +56,11 @@ return [
     ],
     "PRIVACY" => "Politique de confidentialité",
 
-    "SLUG" => "Slug",
-    "SLUG_CONDITION" => "Slug/Conditions",
+    "SLUG" => "Jeton",
+    "SLUG_CONDITION" => "Jeton/Conditions",
+    "SLUG_IN_USE" => "Un jeton <strong>{{slug}}</strong> existe déjà",
     "STATUS" => "Statut",
+    "SUGGEST" => "Suggérer",
 
     "UNKNOWN" => "Inconnu",
 
@@ -83,7 +85,7 @@ return [
     "EDIT" => "Modifier",
     "ENABLE" => "Activer",
     "ENABLED" => "Activé",
-    "OVERWRITE" => "Forcer",
+    "OVERRIDE" => "Forcer",
     "RESET" => "Réinitialiser",
     "SAVE" => "Sauvegarder",
     "SEARCH" => "Rechercher",

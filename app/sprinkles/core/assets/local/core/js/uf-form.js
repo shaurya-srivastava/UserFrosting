@@ -54,6 +54,7 @@
                 msgTarget           : this.$T.find('.js-form-alerts'),
                 beforeSubmitCallback: null,
                 binaryCheckboxes    : true,     // submit checked/unchecked checkboxes as 0/1 values
+                keyupDelay          : 0,
                 DEBUG: false
             },
             options
@@ -62,7 +63,7 @@
         this._init( target, options );
 
         return this;
-    }
+    };
 
     /** #### INITIALISER #### */
     Plugin.prototype._init = function ( target, options )
@@ -81,41 +82,40 @@
                 var form = $(f);
 
                 // Set "loading" text for submit button, if it exists, and disable button
-                var submit_button = form.find("button[type=submit]");
-                if (submit_button) {
-                    var submit_button_text = submit_button.html();
-                    submit_button.prop( "disabled", true );
-                    submit_button.html("<i class='fa fa-spinner fa-spin'></i>");
+                var submitButton = form.find("button[type=submit]");
+                if (submitButton) {
+                    var submitButtonText = submitButton.html();
+                    submitButton.prop( "disabled", true );
+                    submitButton.html("<i class='fa fa-spinner fa-spin'></i>");
                 }
+                
+                // common params
+                var reqParams = {
+                    type: form.attr('method'),
+                    url: form.attr('action')
+                };
 
-                // Serialize and post to the backend script in ajax mode
-                if (base.options.binaryCheckboxes) {
-                    var serializedData = form.find(':input').not(':checkbox').serialize();
-                    // Get unchecked checkbox values, set them to 0
-                    form.find('input[type=checkbox]:enabled').each(function() {
-                        if ($(this).is(':checked'))
-                            serializedData += "&" + encodeURIComponent(this.name) + "=1";
-                        else
-                            serializedData += "&" + encodeURIComponent(this.name) + "=0";
-                    });
+                var encType = (typeof form.attr('enctype') !== 'undefined') ? form.attr('enctype') : '';
+
+                // Get the form encoding type from the users HTML, and chose an encoding form.
+                if (encType.toLowerCase() === "multipart/form-data" ) {
+                    reqParams.data = base._multipartData(form);
+                    // add additional params to fix jquery errors
+                    reqParams.cache = false;
+                    reqParams.contentType = false;
+                    reqParams.processData = false;
                 } else {
-                    var serializedData = form.find(':input').serialize();
+                    reqParams.data = base._urlencodeData(form);
                 }
 
                 // Submit the form via AJAX
-                var url = form.attr('action');
-                $.ajax({
-                  type: form.attr('method'),
-                  url: url,
-                  data: serializedData
-                })
-                .then(
+                $.ajax(reqParams).then(
                     // Submission successful
                     function (data, textStatus, jqXHR) {
                         // Restore button text and re-enable submit button
-                        if (submit_button) {
-                            submit_button.prop( "disabled", false );
-                            submit_button.html(submit_button_text);
+                        if (submitButton) {
+                            submitButton.prop( "disabled", false );
+                            submitButton.html(submitButtonText);
                         }
 
                         base.$T.trigger('submitSuccess.ufForm', [data, textStatus, jqXHR]);
@@ -124,9 +124,9 @@
                     // Submission failed
                     function (jqXHR, textStatus, errorThrown) {
                         // Restore button text and re-enable submit button
-                        if (submit_button) {
-                            submit_button.prop( "disabled", false );
-                            submit_button.html(submit_button_text);
+                        if (submitButton) {
+                            submitButton.prop( "disabled", false );
+                            submitButton.html(submitButtonText);
                         }
                         // Error messages
                         if ((typeof site !== "undefined") && site.debug.ajax && jqXHR.responseText) {
@@ -153,8 +153,89 @@
                         return jqXHR;
                     }
                 );
+            },
+            onkeyup: function( element, event ) {
+                // See http://stackoverflow.com/questions/41363409/jquery-validate-add-delay-to-keyup-validation
+                var form = this;
+                setTimeout(function() {
+                    // Avoid revalidate the field when pressing one of the following keys
+                    // Shift       => 16
+                    // Ctrl        => 17
+                    // Alt         => 18
+                    // Caps lock   => 20
+                    // End         => 35
+                    // Home        => 36
+                    // Left arrow  => 37
+                    // Up arrow    => 38
+                    // Right arrow => 39
+                    // Down arrow  => 40
+                    // Insert      => 45
+                    // Num lock    => 144
+                    // AltGr key   => 225
+                    var excludedKeys = [
+                        16, 17, 18, 20, 35, 36, 37,
+                        38, 39, 40, 45, 144, 225
+                    ];
+        
+                    if ( event.which === 9 && form.elementValue( element ) === "" || $.inArray( event.keyCode, excludedKeys ) !== -1 ) {
+                        return;
+                    } else if ( element.name in form.submitted || element.name in form.invalid ) {
+                        form.element( element );
+                    }
+                }, base.options.keyupDelay);
             }
         });
+    };
+
+    /**
+     * Helper function for encoding data as urlencoded
+     */
+    Plugin.prototype._urlencodeData = function (form) 
+    {
+        var base = this;
+
+        // Serialize and post to the backend script in ajax mode
+        if (base.options.binaryCheckboxes) {
+            var serializedData = form.find(':input').not(':checkbox').serialize();
+            // Get unchecked checkbox values, set them to 0
+            form.find('input[type=checkbox]:enabled').each(function() {
+                if ($(this).is(':checked')) {
+                    serializedData += "&" + encodeURIComponent(this.name) + "=1";
+                } else {
+                    serializedData += "&" + encodeURIComponent(this.name) + "=0";
+                }
+            });
+        } else {
+            var serializedData = form.find(':input').serialize();
+        }
+
+        return serializedData;
+    };
+
+    /**
+     * Helper function for encoding data as multipart/form-data
+     */
+    Plugin.prototype._multipartData = function (form)
+    {
+        var base = this;
+        // Use FormData to wrap form contents.
+        // https://developer.mozilla.org/en/docs/Web/API/FormData
+        var formData = new FormData(form[0]);
+        // Serialize and post to the backend script in ajax mode
+        if (base.options.binaryCheckboxes) {
+            // Get unchecked checkbox values, set them to 0
+            form.find('input[type=checkbox]:enabled').each(function() {
+                if ($(this).is(':checked')) {
+                    // this replaces checkbox value with 1 (as we're using binaryCheckboxes).
+                    formData.set(this.name, 1);
+                    // this explicitly adds unchecked boxes.
+                } else {
+                    formData.set(this.name, 0);
+                }
+            });
+        }
+
+        return formData;
     };
 
     /**
@@ -166,11 +247,11 @@
         for (var i in arguments) {
             console.log( PLUGIN_NS + ': ', arguments[i] );
         }
-    }
+    };
     Plugin.prototype.DWARN = function ()
     {
         this.DEBUG && console.warn( arguments );
-    }
+    };
 
 
 /*###################################################################################

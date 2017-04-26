@@ -110,6 +110,7 @@
             {
                 DEBUG       : false,
                 dataUrl     : "",
+                msgTarget   : $('#alerts-page'),
                 addParams   : {},
                 tablesorter : {
                     debug: false,
@@ -121,6 +122,7 @@
                     widgets: ['saveSort','sort2Hash','filter'],
                     widgetOptions : {
                         filter_saveFilters : true,
+                        filter_serversideFiltering : true,
                         // hash prefix
                         sort2Hash_hash              : '#',
                         // don't '#' or '=' here
@@ -129,22 +131,17 @@
                         sort2Hash_tableId           : null,
                         // if true, show header cell text instead of a zero-based column index
                         sort2Hash_headerTextAttr    : 'data-column-name',
-                        // allow processing of text if sort2Hash_useHeaderText: true
-                        sort2Hash_processHeaderText : function( text, config, columnIndex ) {
-                            var column_name = $(config.headerList[columnIndex]).data("column-name");
-                            if (column_name) {
-                                return column_name;
-                            } else {
-                                return columnIndex;
-                            }
-                        },
                         sort2Hash_encodeHash : base._encodeHash,
                         sort2Hash_decodeHash : base._decodeHash,
                         sort2Hash_cleanHash : base._cleanHash,
                         // direction text shown in the URL e.g. [ 'asc', 'desc' ]
                         sort2Hash_directionText     : [ 'asc', 'desc' ], // default values
                         // if true, override saveSort widget sort, if used & stored sort is available
-                        sort2Hash_overrideSaveSort  : true // default = false
+                        sort2Hash_overrideSaveSort  : true, // default = false
+                        filter_selectSource: {
+                            ".filter-metaselect": base._buildFilterSelect
+                        },
+                        filter_cssFilter: 'form-control'
                     }
                 },
                 pager : {
@@ -209,7 +206,7 @@
         this._init( target, options );
 
         return this;
-    }
+    };
 
     /**
      * Get state variables for this table, as required by the AJAX data source: sorts, filters, size, page
@@ -253,7 +250,7 @@
         };
 
         return state;
-    }
+    };
 
     /** #### INITIALISER #### */
     Plugin.prototype._init = function ( target, options )
@@ -271,6 +268,11 @@
         // Callback to process the response from the AJAX request
         base.options.pager.ajaxProcessing = function ( data ) {
             return base._processAjax(base, data);
+        };
+
+        // Callback to display errors
+         base.options.pager.ajaxError = function ( config, xhr, settings, exception ) {
+            return base._ajaxError(base, config, xhr, settings, exception);
         };
 
         // Set up tablesorter and pager
@@ -292,6 +294,7 @@
         });
 
         base.ts.on("pagerComplete", function () {
+            $el.find(".tablesorter").trigger('update');
             $el.trigger("pagerComplete.ufTable");
         });
     };
@@ -312,7 +315,7 @@
         $.extend(table.config.pager.ajaxObject.data, base.options.addParams);
 
         return url;
-    }
+    };
 
     /**
      * Callback for processing data returned from the AJAX request and rendering the table cells.
@@ -361,7 +364,33 @@
         }
 
         return json;
-    }
+    };
+
+    Plugin.prototype._ajaxError = function(base, c, jqXHR, settings, exception) {
+        if (typeof jqXHR === 'object') {
+            // Error messages
+            if ((typeof site !== "undefined") && site.debug.ajax && jqXHR.responseText) {
+                document.write(jqXHR.responseText);
+                document.close();
+            } else {
+                if (base.options.DEBUG) {
+                    console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
+                }
+                // Display errors on failure
+                // TODO: ufAlerts widget should have a 'destroy' method
+                if (!base.options.msgTarget.data('ufAlerts')) {
+                    base.options.msgTarget.ufAlerts();
+                } else {
+                    base.options.msgTarget.ufAlerts('clear');
+                }
+
+                base.options.msgTarget.ufAlerts('fetch').ufAlerts('render');
+            }
+        }
+
+        // Let TS handle the in-table error message
+        return '';
+    };
 
     /**
      * Private method used to encode the current table state variables into a URL hash.
@@ -392,7 +421,7 @@
             return encodedFilters;
         }
         return false;
-    }
+    };
 
     /**
      * Private method used to decode the current table state variables from the URL hash.
@@ -428,7 +457,7 @@
             }
         }
         return false;
-    }
+    };
 
     /**
      * Private method used to clean up URL hash.
@@ -451,6 +480,72 @@
         // Convert modified JSON object back into serialized representation
         result = jQuery.param(urlObject);
         return result.length ? result : '';
+    };
+
+    /**
+     * Private method used to build the filter select using data attributes for custom options
+     * Based on tablesorter.filter.getOptions
+     */
+    Plugin.prototype._buildFilterSelect = function (table, column, onlyAvail) {
+
+        table = $( table )[0];
+		var rowIndex, tbodyIndex, len, row, cache, indx, child, childLen, colData,
+			c = table.config,
+			wo = c.widgetOptions,
+			arry = [];
+		for ( tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ) {
+			cache = c.cache[tbodyIndex];
+			len = c.cache[tbodyIndex].normalized.length;
+			// loop through the rows
+			for ( rowIndex = 0; rowIndex < len; rowIndex++ ) {
+				// get cached row from cache.row ( old ) or row data object
+				// ( new; last item in normalized array )
+				row = cache.row ?
+					cache.row[ rowIndex ] :
+					cache.normalized[ rowIndex ][ c.columns ].$row[0];
+				// check if has class filtered
+				if ( onlyAvail && row.className.match( wo.filter_filteredRow ) ) {
+					continue;
+				}
+
+				// Get the column data attributes
+				if (row.getElementsByTagName('td')[column].getAttribute('data-value')) {
+    				colData = row.getElementsByTagName('td')[column].getAttribute('data-value');
+				} else {
+    				colData = false;
+				}
+
+				// get non-normalized cell content
+				if ( wo.filter_useParsedData ||
+					c.parsers[column].parsed ||
+					c.$headerIndexed[column].hasClass( 'filter-parsed' ) ) {
+
+					arry[ arry.length ] = {
+    					value : (colData) ? colData : cache.normalized[ rowIndex ][ column ],
+    					text : cache.normalized[ rowIndex ][ column ]
+    				};
+				} else {
+
+					arry[ arry.length ] = {
+    					value : (colData) ? colData : cache.normalized[ rowIndex ][ c.columns ].raw[ column ],
+    					text : cache.normalized[ rowIndex ][ c.columns ].raw[ column ]
+    				};
+				}
+			}
+		}
+
+		// Remove duplicates in `arry` since using an array of objects
+		// won't do it automatically
+		var arr = {};
+
+        for ( var i=0, len=arry.length; i < len; i++ )
+            arr[arry[i]['text']] = arry[i];
+
+        arry = new Array();
+        for ( var key in arr )
+            arry.push(arr[key]);
+
+		return arry;
     }
 
     /**
@@ -462,11 +557,11 @@
         for (var i in arguments) {
             console.log( PLUGIN_NS + ': ', arguments[i] );
         }
-    }
+    };
     Plugin.prototype.DWARN = function ()
     {
         this.DEBUG && console.warn( arguments );
-    }
+    };
 
 
 /*###################################################################################

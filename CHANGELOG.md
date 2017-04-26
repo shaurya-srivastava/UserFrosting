@@ -1,6 +1,71 @@
 # Change Log
 
-## v4.0.x-dev
+## v4.1.x-dev
+- Move composer.json to root directory to allow installing UF via composer create-project
+- Move sprinkles.json to app directory to make it easier to find
+- Factor out "system" classes from core Sprinkle
+- Refactor overall application lifecycle; move main lifecycle into UserFrosting\System\UserFrosting
+- SprinkleManager now better focused on a single responsibility
+- Sprinkle initializer classes now use events to hook into application lifecycle
+- Support for allowing Sprinkles to register middleware (#617)
+- Automatically load Sprinkler service providers (see #636)
+- Get rid of "implicit loading" for core Sprinkle - core is now just an ordinary Sprinkle like any other.
+
+## v4.0.15-Alpha
+- Prevent mixed content on demo pages
+- Fixed some missing translations
+- Fixed error in ufAlerts push method
+- Fixed usage of hard coded path
+- Fixed default OS option in migration script
+- Prevents empty locale's from displaying as empty options in profile form
+- Unignore .gitkeeps of directories that need to exist
+
+## v4.0.14-Alpha
+- Fix ajax.delay in ufCollection
+- Fix missing translations
+- Minor fix in French translation
+- Fix alert margin when displayed inside a modal
+
+## v4.0.13-Alpha
+- Update to RememberMe 2.0 (https://github.com/userfrosting/UserFrosting/issues/635)
+- Remove database checks, as they are apparently no longer needed (https://github.com/userfrosting/UserFrosting/issues/655)
+- Bump dependencies
+
+## v4.0.12-Alpha
+- Separate out the registration and sign-in pages (https://github.com/userfrosting/UserFrosting/issues/657) **BC**
+- Slightly change behavior of form validation icons
+- Sprunje input validation (https://github.com/userfrosting/UserFrosting/issues/640)
+- Sprunje sort/filter fields now must be explicitly listed in a whitelist (https://github.com/userfrosting/UserFrosting/issues/640) **BC**
+- Errors from tablesorter now get displayed
+- Support for OR expressions using `||` in Sprunje filters (https://github.com/userfrosting/UserFrosting/issues/647)
+
+## v4.0.11-Alpha
+- Fix [#663](https://github.com/userfrosting/UserFrosting/issues/663)
+- Adding more Twig `blocks`
+- ufAlerts now scroll to alert location, if and only if alerts are output.
+- Updated Dutch locale
+- Minor update in French locale
+- Added comments in `.env.example`
+
+## v4.0.10-Alpha
+- Move suggestion button outta-da-way
+- Add email to registration success message
+- Separate out some page content into smaller blocks
+- Factor out select2 options in ufCollection, into the 'dropdown' key so that any select2 option can be set
+
+## v4.0.9-Alpha
+- Oops, `exists` needs to be static
+
+## v4.0.8-Alpha
+- Autogenerate and suggestion features for usernames during account registration (partially addresses https://github.com/userfrosting/UserFrosting/issues/569)
+- Restrict username characters to a-z0-9.-_
+- Require first name by default
+- Throttle registration attempts
+- Implement User::exists method
+- keyupDelay option in ufForm
+- More logging of group and role CRUD
+- Implement extra:// stream
+- Lots of missing translation keys
 
 ## v4.0.7-Alpha
 - Separate "profile settings" from "account settings"
@@ -39,7 +104,7 @@
 - Specify foreign key explicitly in `User::activities()` relationship.
 - Database checks in installer and Authenticator now respect custom database ports. (See [#628](https://github.com/userfrosting/UserFrosting/issues/628))
 - Fixed edge case where `5%C` would appear in generated urls.
-- Improved stability and added php version check in `migrations/intall.php` 
+- Improved stability and added php version check in `migrations/intall.php`
 - Update ClassMapper to throw exception when class is not found
 - Fix minor errors in French locale
 - Fix translation error on the Legal page
