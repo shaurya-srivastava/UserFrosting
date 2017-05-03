@@ -11,9 +11,6 @@
                 'default' => 'array',
             ]
         ],
-        'session' => [
-            'handler'       => 'array',
-        ],
         'settings' => [
             'displayErrorDetails' => false
         ],
