@@ -3,10 +3,10 @@
 A web based log viewer with the ability search logs by mutiple strings within a time range.
 
 Features:
-# User Management
-# DB Query
-# Health Check Graphs
-# Log Record Viewer
+## User Management
+## DB Query
+## Health Check Graphs
+## Log Record Viewer
 
 
 Web Authentication based on UserFrosting!
