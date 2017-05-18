@@ -1,0 +1,116 @@
+<html>
+    <head>
+      <!--Import Google Icon Font-->
+      <!--<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">-->
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="/mywebsite/css/materialize.min.css"  media="screen,projection"/>
+      <link type="text/css" rel="stylesheet" href="/mywebsite/css/form_validation.css"  media="screen,projection"/>
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    </head>
+
+    <body>
+      <!--Import jQuery before materialize.js-->
+      <script type="text/javascript" src="/mywebsite/js/jquery-2.1.1.min.js"></script>
+      <script type="text/javascript" src="/mywebsite/js/materialize.min.js"></script>
+      <script type="text/javascript" src="/mywebsite/js/get_logs.js"></script>
+      
+      <!-- Include the Admin Panel Navigation bar-->
+      {% include "components/default/admin-panel-nav-bar.html.twig" %}
+      
+      <br><br>
+
+        <form class="col s10" id="inputForm" name="inputForm" method="POST" onsubmit="">
+        <div class="row container">
+          <div class="input-field col s2 offset-s2">
+            <input id="grepString" type="text" class="validate">
+            <label for="grepString">IMSI or MSISDN</label>
+          </div>
+          <div class="input-field col s2">
+            <input id="string" type="text" class="validate">
+            <label for="string">Search String</label>
+          </div>
+          <div id="select" class="input-field col s4">
+              <select name="selector" id="logSelection">
+                <option value="test" disabled selected> Choose the VM and Log file</option>
+                <optgroup label="JMLCM 01-15">
+                  <option value="host_input=jmlcm&app_input=mlpServer&log_input=req"> MLP Server : req.log</option>
+                  <option value="host_input=jmlcm&app_input=tlrr&log_input=res"> TLRR : res.log </option>
+                  <!--<option value="host_input=jmlcm&app_input=tlrr&log_input=traffic"> TLRR : traffic.log </option>-->
+                </optgroup>
+                <label> Select </label>
+              </select>
+          </div>
+          
+          <div class="input-field col s4 offset-s1">
+            <div class="input-field col s6">
+              <input name="radio1" type="radio" id="hour_radio" value="hour" />
+              <label for="hour_radio">Last 1 hour</label>
+            </div>
+            <div class="input-field col s6">
+              <input name="radio1" type="radio" id="date_radio" value="date" checked="checked"/>
+              <label for="date_radio">Select a Date</label>
+            </div>
+          </div> 
+          <div id="date" class="input-field col s2">
+            <input id="datepicker" type="date" class="datepicker">
+            <label for="datepicker">Date</label>
+          </div>
+          <div class="input-field col s2">
+            <input id="startTime" type="text" class="time" maxlength="5">
+            <label for="startTime">Start Time</label>
+          </div>
+          <div class="input-field col s2">
+            <input id="endTime" type="text" class="time" maxlength="5">
+            <label for="endTime">End Time</label>
+          </div>
+          
+          </div>
+          
+          <div class="row container"> 
+          <div class="center">
+            <button class="btn-large waves-effect waves-light" type="submit" name="action">Search</button>
+            </div>                  
+          </div>
+        </form>
+
+      <!--<div class="row center">
+        <a href="#" id="download-button" class="btn-large waves-effect waves-light materialize-blue ligten-4">Search</a>
+      </div>-->
+      <!--<div class="row">
+        <div class="col s6 offset-s3">
+          <div class="card-panel white">
+            <span class="black-text"><h4>IMSI <br><br><div id="msisdnToimsiResult"></div></h4>
+            </span>
+          </div>
+          <div class="card-panel white">
+            <span class="black-text"><h4>MSISDN <br><br><div id="imsiTomsisdnResult"></div></h4>
+          </div> 
+        </div>
+        <div class="col s6 offset-s3">-->
+          
+        <div class="row s12">
+          <div class="col s12">
+            <div id="whiteCard" class="card-panel white">
+              <span class="black-text"><h5 id="hostnameAndFilenameResult"></h5></span>
+                <div id="wait" class="row container center">
+                  <div class="preloader-wrapper big active">
+                    <div class="spinner-layer spinner-red-only ">
+                      <div class="circle-clipper left">
+                          <div class="circle"></div>
+                          </div>
+                          <div class="gap-patch">
+                            <div class="circle"></div>
+                          </div>
+                          <div class="circle-clipper right">
+                            <div class="circle"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="Result"></div>
+              </div>
+            </div>      
+          </div> <!-- End of Row 1-->
