@@ -345,9 +345,11 @@ class AccountServicesProvider
                 $currentUser = $c->authenticator->user();
 
                 if ($authorizer->checkAccess($currentUser, 'uri_account_settings')) {
-                    return $response->withHeader('UF-Redirect', $c->router->pathFor('settings'));
+                    //return $response->withHeader('UF-Redirect', $c->router->pathFor('settings'));
+                    return $response->withHeader('UF-Redirect', $c->router->pathFor('indexAdminPanel'));
                 } else {
-                    return $response->withHeader('UF-Redirect', $c->router->pathFor('index'));
+                    //return $response->withHeader('UF-Redirect', $c->router->pathFor('index'));
+                    return $response->withHeader('UF-Redirect', $c->router->pathFor('indexAdminPanel'));
                 }
             };
         };

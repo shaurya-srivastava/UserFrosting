@@ -49,7 +49,7 @@ class RoleController extends SimpleController
         // Get POST parameters: name, slug, description
         $params = $request->getParsedBody();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -60,7 +60,7 @@ class RoleController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
 
         // Load the request schema
@@ -97,7 +97,7 @@ class RoleController extends SimpleController
             return $response->withStatus(400);
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
 
         // All checks passed!  log events/activities and create role
@@ -142,7 +142,7 @@ class RoleController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -190,7 +190,7 @@ class RoleController extends SimpleController
             ]);
         });
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
 
         $ms->addMessageTranslated('success', 'ROLE.DELETION_SUCCESSFUL', [
@@ -212,7 +212,7 @@ class RoleController extends SimpleController
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -245,7 +245,7 @@ class RoleController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -299,13 +299,12 @@ class RoleController extends SimpleController
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
-        /** @var UserFrosting\I18n\MessageTranslator $translator */
         $translator = $this->ci->translator;
 
         // Access-controlled page
@@ -365,14 +364,11 @@ class RoleController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
-
-        /** @var UserFrosting\I18n\MessageTranslator $translator */
-        $translator = $this->ci->translator;
 
         // Access-controlled resource - check that currentUser has permission to edit basic fields "name", "slug", "description" for this role
         $fieldNames = ['name', 'slug', 'description'];
@@ -391,7 +387,7 @@ class RoleController extends SimpleController
 
         // Load validation rules
         $schema = new RequestSchema('schema://role/edit-info.json');
-        $validator = new JqueryValidationAdapter($schema, $translator);
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'components/modals/role.html.twig', [
             'role' => $role,
@@ -399,7 +395,7 @@ class RoleController extends SimpleController
                 'action' => "api/roles/r/{$role->slug}",
                 'method' => 'PUT',
                 'fields' => $fields,
-                'submit_text' => $translator->translate('UPDATE')
+                'submit_text' => $translator->translate("UPDATE")
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)
@@ -426,7 +422,7 @@ class RoleController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -464,7 +460,7 @@ class RoleController extends SimpleController
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -510,7 +506,7 @@ class RoleController extends SimpleController
             return $response->withRedirect($redirectPage, 404);
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -528,14 +524,17 @@ class RoleController extends SimpleController
 
         // Generate form
         $fields = [
-            'hidden' => []
+            'hidden' => [],
+            'disabled' => []
         ];
 
         foreach ($fieldNames as $field) {
-            if (!$authorizer->checkAccess($currentUser, 'view_role_field', [
+            if ($authorizer->checkAccess($currentUser, 'view_role_field', [
                 'role' => $role,
                 'property' => $field
             ])) {
+                $fields['disabled'][] = $field;
+            } else {
                 $fields['hidden'][] = $field;
             }
         }
@@ -560,8 +559,10 @@ class RoleController extends SimpleController
 
         return $this->ci->view->render($response, 'pages/role.html.twig', [
             'role' => $role,
-            'fields' => $fields,
-            'tools' => $editButtons
+            'form' => [
+                'fields' => $fields,
+                'edit_buttons' => $editButtons
+            ]
         ]);
     }
 
@@ -575,7 +576,7 @@ class RoleController extends SimpleController
      */
     public function pageList($request, $response, $args)
     {
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -609,13 +610,13 @@ class RoleController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
 
         // Get PUT parameters: (name, slug, description)
         $params = $request->getParsedBody();
 
-        /** @var UserFrosting\I18n\MessageTranslator $translator */
+        /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
 
         // Load the request schema
@@ -640,7 +641,7 @@ class RoleController extends SimpleController
             $fieldNames[] = $name;
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -726,7 +727,7 @@ class RoleController extends SimpleController
         // Get key->value pair from URL and request body
         $fieldName = $args['field'];
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -740,7 +741,7 @@ class RoleController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
 
         // Get PUT parameters: value
@@ -779,7 +780,7 @@ class RoleController extends SimpleController
         // Get validated and transformed value
         $fieldValue = $data[$fieldName];
 
-        /** @var UserFrosting\I18n\MessageTranslator $translator */
+        /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
 
         // Begin transaction - DB will be rolled back if an exception occurs

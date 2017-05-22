@@ -60,8 +60,7 @@ return [
         "NAME_EXPLAIN"  => "Please enter a name for the group",
         "NOT_EMPTY"     => "You can't do that because there are still users associated with the group <strong>{{name}}</strong>.",
         "PAGE_DESCRIPTION" => "A listing of the groups for your site.  Provides management tools for editing and deleting groups.",
-        "SUMMARY"       => "Group Summary",
-        "UPDATE"        => "Details updated for group <strong>{{name}}</strong>"
+        "UPDATE"           => "Details updated for group <strong>{{name}}</strong>"
     ],
 
     "MANUALLY_ACTIVATED"    => "{{user_name}}'s account has been manually activated",
@@ -102,7 +101,6 @@ return [
         "NAME_IN_USE"   => "A role named <strong>{{name}}</strong> already exist",
         "PAGE_DESCRIPTION"  => "A listing of the roles for your site.  Provides management tools for editing and deleting roles.",
         "PERMISSIONS_UPDATED" => "Permissions updated for role <strong>{{name}}</strong>",
-        "SUMMARY"       => "Role Summary",
         "UPDATED"       => "Details updated for role <strong>{{name}}</strong>"
     ],
 
@@ -139,10 +137,9 @@ return [
         "EDIT"              => "Edit user",
         "ENABLE"            => "Enable user",
         "INFO_PAGE"         => "User information page for {{name}}",
-        "LATEST"            => "Latest Users",
         "PAGE_DESCRIPTION"  => "A listing of the users for your site.  Provides management tools including the ability to edit user details, manually activate users, enable/disable users, and more.",
-        "SUMMARY"           => "Account Summary",
-        "VIEW_ALL"          => "View all users"
+        "LATEST"    => "Latest Users",
+        "VIEW_ALL"  => "View all users"
     ],
     "X_USER" => [
         0 => "No users",

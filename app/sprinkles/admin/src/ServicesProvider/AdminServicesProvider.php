@@ -52,11 +52,14 @@ class AdminServicesProvider
                 $currentUser = $c->authenticator->user();
 
                 if ($authorizer->checkAccess($currentUser, 'uri_dashboard')) {
+		    //return $response->withHeader('UF-Redirect', $c->router->pathFor('indexAdminPanel'));
                     return $response->withHeader('UF-Redirect', $c->router->pathFor('dashboard'));
                 } elseif ($authorizer->checkAccess($currentUser, 'uri_account_settings')) {
-                    return $response->withHeader('UF-Redirect', $c->router->pathFor('settings'));
+                    //return $response->withHeader('UF-Redirect', $c->router->pathFor('settings'));
+		    return $response->withHeader('UF-Redirect', $c->router->pathFor('indexAdminPanel'));
                 } else {
-                    return $response->withHeader('UF-Redirect', $c->router->pathFor('index'));
+                    //return $response->withHeader('UF-Redirect', $c->router->pathFor('index'));
+                    return $response->withHeader('UF-Redirect', $c->router->pathFor('indexAdminPanel'));
                 }
             };
         };

@@ -13,7 +13,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Exception\NotFoundException as NotFoundException;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
@@ -90,7 +89,6 @@ class AccountController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        /** @var UserFrosting\I18n\MessageTranslator $translator */
         $translator = $this->ci->translator;
 
         // Log throttleable event
@@ -415,12 +413,8 @@ class AccountController extends SimpleController
      */
     public function pageRegister($request, $response, $args)
     {
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
-
-        if (!$config['site.registration.enabled']) {
-            throw new NotFoundException($request, $response);
-        }
 
         /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
         $authenticator = $this->ci->authenticator;
@@ -545,7 +539,7 @@ class AccountController extends SimpleController
         $schema = new RequestSchema("schema://profile-settings.json");
         $validatorProfileSettings = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
 
         // Get a list of all locales
@@ -572,7 +566,6 @@ class AccountController extends SimpleController
      */
     public function pageSignIn($request, $response, $args)
     {
-        /** @var UserFrosting\Config\Config $config */
         $config = $this->ci->config;
 
         /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
@@ -700,7 +693,7 @@ class AccountController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
 
         // Get POST parameters: user_name, first_name, last_name, email, password, passwordc, captcha, spiderbro, csrf_token
@@ -1196,4 +1189,5 @@ class AccountController extends SimpleController
         // Forward to login page
         return $response->withRedirect($loginPage);
     }
+
 }

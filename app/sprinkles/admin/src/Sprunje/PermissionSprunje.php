@@ -30,8 +30,7 @@ class PermissionSprunje extends Sprunje
 
     protected $filterable = [
         'name',
-        'properties',
-        'info'
+        'properties'
     ];
 
     /**

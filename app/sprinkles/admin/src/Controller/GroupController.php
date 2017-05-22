@@ -49,7 +49,7 @@ class GroupController extends SimpleController
         // Get POST parameters: name, slug, icon, description
         $params = $request->getParsedBody();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -60,7 +60,7 @@ class GroupController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
 
         // Load the request schema
@@ -97,7 +97,7 @@ class GroupController extends SimpleController
             return $response->withStatus(400);
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
 
         // All checks passed!  log events/activities and create group
@@ -142,7 +142,7 @@ class GroupController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -155,7 +155,7 @@ class GroupController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
 
         // Check that we are not deleting the default group
@@ -191,7 +191,7 @@ class GroupController extends SimpleController
             ]);
         });
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
 
         $ms->addMessageTranslated('success', 'GROUP.DELETION_SUCCESSFUL', [
@@ -213,7 +213,7 @@ class GroupController extends SimpleController
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -246,7 +246,7 @@ class GroupController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -290,13 +290,12 @@ class GroupController extends SimpleController
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
-        /** @var UserFrosting\I18n\MessageTranslator $translator */
         $translator = $this->ci->translator;
 
         // Access-controlled page
@@ -358,14 +357,11 @@ class GroupController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
-
-        /** @var UserFrosting\I18n\MessageTranslator $translator */
-        $translator = $this->ci->translator;
 
         // Access-controlled resource - check that currentUser has permission to edit basic fields "name", "slug", "icon", "description" for this group
         $fieldNames = ['name', 'slug', 'icon', 'description'];
@@ -384,7 +380,7 @@ class GroupController extends SimpleController
 
         // Load validation rules
         $schema = new RequestSchema('schema://group/edit-info.json');
-        $validator = new JqueryValidationAdapter($schema, $translator);
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'components/modals/group.html.twig', [
             'group' => $group,
@@ -392,7 +388,7 @@ class GroupController extends SimpleController
                 'action' => "api/groups/g/{$group->slug}",
                 'method' => 'PUT',
                 'fields' => $fields,
-                'submit_text' => $translator->translate('UPDATE')
+                'submit_text' => $translator->translate("UPDATE")
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)
@@ -412,7 +408,7 @@ class GroupController extends SimpleController
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -458,7 +454,7 @@ class GroupController extends SimpleController
             return $response->withRedirect($redirectPage, 404);
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -476,14 +472,17 @@ class GroupController extends SimpleController
 
         // Generate form
         $fields = [
-            'hidden' => []
+            'hidden' => [],
+            'disabled' => []
         ];
 
         foreach ($fieldNames as $field) {
-            if (!$authorizer->checkAccess($currentUser, 'view_group_field', [
+            if ($authorizer->checkAccess($currentUser, 'view_group_field', [
                 'group' => $group,
                 'property' => $field
             ])) {
+                $fields['disabled'][] = $field;
+            } else {
                 $fields['hidden'][] = $field;
             }
         }
@@ -508,8 +507,10 @@ class GroupController extends SimpleController
 
         return $this->ci->view->render($response, 'pages/group.html.twig', [
             'group' => $group,
-            'fields' => $fields,
-            'tools' => $editButtons
+            'form' => [
+                'fields' => $fields,
+                'edit_buttons' => $editButtons
+            ]
         ]);
     }
 
@@ -523,7 +524,7 @@ class GroupController extends SimpleController
      */
     public function pageList($request, $response, $args)
     {
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -557,13 +558,13 @@ class GroupController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
 
         // Get PUT parameters: (name, slug, icon, description)
         $params = $request->getParsedBody();
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
 
         // Load the request schema
@@ -588,7 +589,7 @@ class GroupController extends SimpleController
             $fieldNames[] = $name;
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */

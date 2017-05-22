@@ -48,12 +48,12 @@
         // "Site" settings that are automatically passed to Twig
         'site' => [
             'login' => [
-                'enable_email' => true
+                'enable_email' => false
             ],
             'registration' => [
-                'enabled' => true,
+                'enabled' => false,
                 'captcha' => true,
-                'require_email_verification' => true,
+                'require_email_verification' => false,
                 'user_defaults' => [
                     'locale' => 'en_US',
                     'group' => 'terran',

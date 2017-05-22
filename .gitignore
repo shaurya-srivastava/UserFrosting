@@ -61,3 +61,6 @@ app/config-userfrosting.php
 
 # Unignore the sprinkle dataf
 !app/sprinkles/
+
+# Unignore the mywebsite js scripts
+!public/mywebsite/

@@ -53,7 +53,7 @@ class UserController extends SimpleController
         // Get POST parameters: user_name, first_name, last_name, email, locale, (group)
         $params = $request->getParsedBody();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -64,7 +64,7 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
 
         // Load the request schema
@@ -101,7 +101,7 @@ class UserController extends SimpleController
             return $response->withStatus(400);
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
 
         // If currentUser does not have permission to set the group, but they try to set it to something other than their own group,
@@ -188,7 +188,7 @@ class UserController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -202,10 +202,10 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
 
         // Begin transaction - DB will be rolled back if an exception occurs
@@ -253,7 +253,7 @@ class UserController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -266,7 +266,7 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
 
         // Check that we are not deleting the master account
@@ -291,7 +291,7 @@ class UserController extends SimpleController
             ]);
         });
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
 
         $ms->addMessageTranslated('success', 'DELETION_SUCCESSFUL', [
@@ -322,7 +322,7 @@ class UserController extends SimpleController
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -372,7 +372,7 @@ class UserController extends SimpleController
                             ->with('lastActivity', 'group')
                             ->first();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -407,7 +407,7 @@ class UserController extends SimpleController
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -447,7 +447,7 @@ class UserController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -460,7 +460,7 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
 
         // Check that we are not deleting the master account
@@ -493,13 +493,12 @@ class UserController extends SimpleController
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
-        /** @var UserFrosting\I18n\MessageTranslator $translator */
         $translator = $this->ci->translator;
 
         // Access-controlled page
@@ -510,7 +509,7 @@ class UserController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
 
         // Determine form fields to hide/disable
@@ -592,7 +591,7 @@ class UserController extends SimpleController
             ->with('group')
             ->first();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -610,7 +609,7 @@ class UserController extends SimpleController
         // Get a list of all groups
         $groups = $classMapper->staticMethod('group', 'all');
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
 
         // Get a list of all locales
@@ -671,7 +670,7 @@ class UserController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -716,7 +715,7 @@ class UserController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -756,7 +755,7 @@ class UserController extends SimpleController
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -799,7 +798,7 @@ class UserController extends SimpleController
             return $response->withRedirect($usersPage, 404);
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -812,27 +811,30 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
 
         // Get a list of all locales
         $locales = $config['site.locales.available'];
 
         // Determine fields that currentUser is authorized to view
-        $fieldNames = ['user_name', 'name', 'email', 'locale', 'group', 'roles'];
+        $fieldNames = ['name', 'email', 'locale'];
 
         // Generate form
         $fields = [
             // Always hide these
-            'hidden' => ['theme']
+            'hidden' => ['user_name', 'group', 'theme'],
+            'disabled' => []
         ];
 
-        // Determine which fields should be hidden
+        // Determine which fields should be hidden entirely
         foreach ($fieldNames as $field) {
-            if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
+            if ($authorizer->checkAccess($currentUser, 'view_user_field', [
                 'user' => $user,
                 'property' => $field
             ])) {
+                $fields['disabled'][] = $field;
+            } else {
                 $fields['hidden'][] = $field;
             }
         }
@@ -886,8 +888,10 @@ class UserController extends SimpleController
         return $this->ci->view->render($response, 'pages/user.html.twig', [
             'user' => $user,
             'locales' => $locales,
-            'fields' => $fields,
-            'tools' => $editButtons
+            'form' => [
+                'fields' => $fields,
+                'edit_buttons' => $editButtons
+            ]
         ]);
     }
 
@@ -901,7 +905,7 @@ class UserController extends SimpleController
      */
     public function pageList($request, $response, $args)
     {
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -934,13 +938,13 @@ class UserController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
 
         // Get PUT parameters
         $params = $request->getParsedBody();
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
 
         // Load the request schema
@@ -971,7 +975,7 @@ class UserController extends SimpleController
             }
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -1057,7 +1061,7 @@ class UserController extends SimpleController
         // Get key->value pair from URL and request body
         $fieldName = $args['field'];
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
@@ -1071,7 +1075,7 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var Config $config */
         $config = $this->ci->config;
 
         // Only the master account can edit the master account!
@@ -1117,7 +1121,7 @@ class UserController extends SimpleController
         // Get validated and transformed value
         $fieldValue = $data[$fieldName];
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
 
         // Special checks and transformations for certain fields

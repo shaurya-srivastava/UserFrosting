@@ -82,7 +82,6 @@
             'password'   => getenv('SMTP_PASSWORD') ?: null,
             'smtp_debug' => 4,
             'message_options' => [
-                'CharSet' => 'UTF-8',
                 'isHtml' => true,
                 'Timeout' => 15
             ]
@@ -132,17 +131,17 @@
                 // Should be ordered according to https://en.wikipedia.org/wiki/List_of_languages_by_total_number_of_speakers,
                 // with the exception of English, which as the default language comes first.
                 'available' => [
-                    'en_US' => 'English',
-                    'ar'    => 'العربية',
-                    'fr_FR' => 'Français',
-                    'pt_PT' => 'Português',
-                    'de_DE' => 'Deutsch',
-                    'th_TH' => 'ภาษาไทย'
+                    'en_US' => 'English'
+                    //'ar'    => 'العربية',
+                    //'fr_FR' => 'Français',
+                    //'pt_PT' => 'Português',
+                    //'de_DE' => 'Deutsch',
+                    //'th_TH' => 'ภาษาไทย'
                 ],
                 // This can be a comma-separated list, to load multiple fallback locales
                 'default' => 'en_US'
             ],
-            'title'     =>      'UserFrosting',
+            'title'     =>      'AdminPanel',
             // URLs
             'uri' => [
                 'base' => [
