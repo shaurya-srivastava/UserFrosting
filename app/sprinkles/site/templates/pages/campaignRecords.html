@@ -24,6 +24,8 @@
                   <option value="upcoming_active">Show Upcoming Active Campaigns</option>
                   <option value="upcoming_inactive">Show Upcoming Inactive Campaigns</option>
                   <option value="">Show All Campaigns</option>
+                  <option value="all_past">Show All Campaigns on Date</option>
+                  <option value="client_info">Show ClientInfo</option>
                 <label for="activeSelector"> Select </label>
               </select>
           </div>
@@ -39,57 +41,75 @@
                 <label> Select2</label>[required]
               </select>
           </div>
-          <div id="stsd" class="input-field col s3">
-              <label for="startTimeStartD" data-required="true">startTime Range Start Date</label>
-              <input id="startTimeStartD" type="date" class="datepicker">
-              
+          <div id="date_div" class="input-field col s3 offset-s3">
+                <input id="date_input" type="date" class="datepicker">                  
+                <label for="Date" data-required="true">Date</label>
           </div>
-          <div id="stst" class="input-field col s3">
-            <input id="startTimeStartT" type="text" class="time" maxlength="5">
-            <label for="startTimeStartT">startTime Range Start Time</label>
+          <div id="time_div" class="input-field col s3">
+                <input id="time_input" type="text" class="time" maxlength="5">
+                <label for="Time">Time</label>
           </div>
-          <div id="sted" class="input-field col s3">
-              <input id="startTimeEndD" type="date" class="datepicker">
-              <label for="startTimeEndD">startTime Range End Date</label>
-          </div>
-          <div id="stet" class="input-field col s3">
-            <input id="startTimeEndT" type="text" class="time" maxlength="5">
-            <label for="startTimeEndT">startTime Range End Time</label>
-          </div>
-          
-          <div id="sosd" class="input-field col s3">
-              <input id="stopTimeStartD" type="date" class="datepicker">
-              <label for="stopTimeStartD">stopTime Range Start Date</label>
-          </div>
-          <div id="sost" class="input-field col s3">
-            <input id="stopTimeStartT" type="text" class="time" maxlength="5">
-            <label for="stopTimeStartT">stopTime Range Start Time</label>
-          </div>
-          <div id="soed" class="input-field col s3">
-              <input id="stopTimeEndD" type="date" class="datepicker">
-              <label for="stopTimeEndD">stopTime Range End Date</label>
-          </div>
-          <div id="soet" class="input-field col s3">
-            <input id="stopTimeEndT" type="text" class="time" maxlength="5">
-            <label for="stopTimeEndT">stopTime Range End Time</label>
-          </div>
+          <ul class="collapsible col s10 offset-s1" data-collapsible="expanded">
+                  <li>
+                      <div class="collapsible-header active">Time Filters</div>
+                      <div class="collapsible-body">
+                          <div id="stsd" class="input-field col s3">
+                              <label for="startTimeStartD" data-required="true">startTime Range Start Date</label>
+                              <input id="startTimeStartD" type="date" class="datepicker">
+                              
+                          </div>
+                          <div id="stst" class="input-field col s3">
+                            <input id="startTimeStartT" type="text" class="time" maxlength="5">
+                            <label for="startTimeStartT">startTime Range Start Time</label>
+                          </div>
+                          <div id="sted" class="input-field col s3">
+                              <input id="startTimeEndD" type="date" class="datepicker">
+                              <label for="startTimeEndD">startTime Range End Date</label>
+                          </div>
+                          <div id="stet" class="input-field col s3">
+                            <input id="startTimeEndT" type="text" class="time" maxlength="5">
+                            <label for="startTimeEndT">startTime Range End Time</label>
+                          </div>
+                          
+                          <div id="sosd" class="input-field col s3">
+                              <input id="stopTimeStartD" type="date" class="datepicker">
+                              <label for="stopTimeStartD">stopTime Range Start Date</label>
+                          </div>
+                          <div id="sost" class="input-field col s3">
+                            <input id="stopTimeStartT" type="text" class="time" maxlength="5">
+                            <label for="stopTimeStartT">stopTime Range Start Time</label>
+                          </div>
+                          <div id="soed" class="input-field col s3">
+                              <input id="stopTimeEndD" type="date" class="datepicker">
+                              <label for="stopTimeEndD">stopTime Range End Date</label>
+                          </div>
+                          <div id="soet" class="input-field col s3">
+                            <input id="stopTimeEndT" type="text" class="time" maxlength="5">
+                            <label for="stopTimeEndT">stopTime Range End Time</label>
+                          </div>
 
-          <div id="crsd" class="input-field col s3">
-              <input id="createdStartD" type="date" class="datepicker">
-              <label for="createdStartD">created Range Start Date</label>
-          </div>
-          <div id="crst" class="input-field col s3">
-            <input id="createdStartT" type="text" class="time" maxlength="5">
-            <label for="createdStartT">created Range Start Time</label>
-          </div>
-          <div id="cred" class="input-field col s3">
-              <input id="createdEndD" type="date" class="datepicker">
-              <label for="createdEndD">created Range End Date</label>
-          </div>
-          <div id="cret" class="input-field col s3">
-            <input id="createdEndT" type="text" class="time" maxlength="5">
-            <label for="createdEndT">created Range End Time</label>
-          </div>
+                          <div id="crsd" class="input-field col s3">
+                              <input id="createdStartD" type="date" class="datepicker">
+                              <label for="createdStartD">created Range Start Date</label>
+                          </div>
+                          <div id="crst" class="input-field col s3">
+                            <input id="createdStartT" type="text" class="time" maxlength="5">
+                            <label for="createdStartT">created Range Start Time</label>
+                          </div>
+                          <div id="cred" class="input-field col s3">
+                              <input id="createdEndD" type="date" class="datepicker">
+                              <label for="createdEndD">created Range End Date</label>
+                          </div>
+                          <div id="cret" class="input-field col s3">
+                            <input id="createdEndT" type="text" class="time" maxlength="5">
+                            <label for="createdEndT">created Range End Time</label>
+                          </div>
+                      </div>
+                  </li>
+            </ul>
+          
+
+
         </div>
         <div class="row container"> 
           <div class="center">

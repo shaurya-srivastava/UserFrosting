@@ -44,6 +44,8 @@ $(document).ready(function(){
 		var createdStartT = $('#createdStartT').val();
 		var createdEndD = $('#createdEndD').val();
 		var createdEndT = $('#createdEndT').val();
+		var date = $('#date_input').val();
+		var time = $('#time_input').val();
 
 		var clientIdent = $('#clientIdent').val();
 		
@@ -62,6 +64,9 @@ $(document).ready(function(){
 			$('div#select2').append('<span id="invlaid_tooltip2" class="tooltiptext">Please select a field</span>');
 			return false;
 		}else if(sort == null){
+			if (active == "client_info"){
+				$('span#invlaid_tooltip1').remove();
+			}
 			$('div#select2').append('<span id="invlaid_tooltip2" class="tooltiptext">Please select a field</span>');
 			$('span#invlaid_tooltip1').remove();
 			return false;
@@ -72,7 +77,27 @@ $(document).ready(function(){
 		}else{
 			$('span#invlaid_tooltip1').remove();
 			$('span#invlaid_tooltip2').remove();
+			$('span#invlaid_tooltip3').remove();
+			$('span#invlaid_tooltip4').remove();
 		}
+
+		if (active == "all_past"){
+			if (date == "" && time == ""){
+				$('div#date_div').append('<span id="invlaid_tooltip3" class="tooltiptext">Please enter the date!</span>');
+				$('div#time_div').append('<span id="invlaid_tooltip4" class="tooltiptext">Please enter the time!</span>');
+				return false;
+			}else if(date == ""){
+				$('div#date_div').append('<span id="invlaid_tooltip3" class="tooltiptext">Please enter the date!</span>');
+				return false;
+			}else if(time == ""){
+				$('div#time_div').append('<span id="invlaid_tooltip4" class="tooltiptext">Please enter the time!</span>');
+				return false;
+			}else{
+				$('span#invlaid_tooltip3').remove();
+				$('span#invlaid_tooltip4').remove();
+			}
+		}
+
 		if ((startTimeStartD != "") && (startTimeStartT == "" || startTimeEndD == "" || startTimeEndT == "")){
 			console.log('hello2');
 			$('div#stsd').append('<span id="invlaid_tooltip1" class="tooltiptextleft">Please enter Start and End time range</span>');
@@ -121,6 +146,7 @@ $(document).ready(function(){
 		}else{
 			$('span#invlaid_tooltip1').remove();
 		}
+		
 
 		if (true){
 			var type, url, data, error, success;
@@ -132,7 +158,7 @@ $(document).ready(function(){
 				cache: false,
 				timeout: 30000
 			}				
-			params.data = "active=" + active + "&startTimeStartD="+ startTimeStartD + "&startTimeStartT=" + startTimeStartT + "&startTimeEndD=" + startTimeEndD + "&startTimeEndT=" + startTimeEndT + "&stopTimeStartD=" + stopTimeStartD + "&stopTimeStartT=" + stopTimeStartT + "&stopTimeEndD=" + stopTimeEndD + "&stopTimeEndT=" + stopTimeEndT + "&createdStartD=" + createdStartD + "&createdStartT=" + createdStartT + "&createdEndD=" + createdEndD + "&createdEndT=" + createdEndT + "&clientIdent=" + clientIdent + "&sort=" + sort;
+			params.data = "active=" + active + "&startTimeStartD="+ startTimeStartD + "&startTimeStartT=" + startTimeStartT + "&startTimeEndD=" + startTimeEndD + "&startTimeEndT=" + startTimeEndT + "&stopTimeStartD=" + stopTimeStartD + "&stopTimeStartT=" + stopTimeStartT + "&stopTimeEndD=" + stopTimeEndD + "&stopTimeEndT=" + stopTimeEndT + "&createdStartD=" + createdStartD + "&createdStartT=" + createdStartT + "&createdEndD=" + createdEndD + "&createdEndT=" + createdEndT + "&date=" + date +"&time=" + time + "&clientIdent=" + clientIdent + "&sort=" + sort;
 			params.error = function(){
 							$('div#Result').text("script call was not successful");
 			};

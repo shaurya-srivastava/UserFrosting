@@ -1,13 +1,5 @@
 
 $(document).ready(function(){
-	var idleInterval = setInterval(timerIncrement, 60000); // 1 minute
-    //Zero the idle timer on mouse movement.
-    $(this).mousemove(function (e) {
-        idleTime = 0;
-    });
-    $(this).keypress(function (e) {
-        idleTime = 0;
-    });
 	$('select').material_select();
 	$('#wait').hide();
 	$('#whiteCard').hide();
@@ -24,6 +16,7 @@ $(document).ready(function(){
             selectYears: 1,
             format: 'yyyy-mm-dd'
     });
+	
 	$('.time').keyup(function() {
 		if (/\D/g.test(this.value)){
 			// Filter non-digits from input value.
